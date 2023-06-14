@@ -5,6 +5,7 @@ public class EmployeeDTO {
 	private String e_pw;
 	private String e_job;
 	
+
 	public EmployeeDTO(){}
 	
 	public String getE_id() {
@@ -13,6 +14,7 @@ public class EmployeeDTO {
 	public void setE_id(String e_id) {
 		this.e_id = e_id;
 	}
+
 	public String getE_pw() {
 		return e_pw;
 	}
@@ -24,6 +26,7 @@ public class EmployeeDTO {
 	}
 	public void setE_job(String e_job) {
 		this.e_job = e_job;
+
 	}
 	
 }

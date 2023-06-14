@@ -9,12 +9,12 @@ import JDBCUtil.ScanUtil;
 import JDBCUtil.TotalView;
 //import dao.LoginDAO;
 
-//¿ÜºÎ·ÎºÎÅÍ ¹Ş¾ÆµéÀÏ¼öÀÖ´Â°ÍÀ» ÀÔ·Â¹Ş´Â Å¬·¡½º
+//ì™¸ë¶€ë¡œë¶€í„° ë°›ì•„ë“¤ì¼ìˆ˜ìˆëŠ”ê²ƒì„ ì…ë ¥ë°›ëŠ” í´ë˜ìŠ¤
 public class LoginService {
 	EmployeeDTO ed = new EmployeeDTO();
 
 	Scanner sc = new Scanner(System.in);
-	// ½Ì±ÛÅæ
+	// ì‹±ê¸€í†¤
 	private static LoginService instance;
 
 	private LoginService() {
@@ -27,7 +27,7 @@ public class LoginService {
 		return instance;
 	}
 
-//----------------------------------------------------¿©±â±îÁö ½Ì±ÛÅæ ±¸Çö
+//----------------------------------------------------ì—¬ê¸°ê¹Œì§€ ì‹±ê¸€í†¤ êµ¬í˜„
 
 	private Map<String, String> sessionStorage = new HashMap<>();
 
@@ -43,22 +43,22 @@ public class LoginService {
 	LoginDAO dao = LoginDAO.getInstance();
 	Map<String, Object> result;
 
-	// ·Î±×ÀÎ ¸Ş¼­µå
+	// ë¡œê·¸ì¸ ë©”ì„œë“œ
 	public Map<String, Object> login() {
-		System.out.println("¢º¢º¢º  ·Î±×ÀÎ ¢¸¢¸¢¸");
+		System.out.println("â–¶â–¶â–¶  ë¡œê·¸ì¸ â—€â—€â—€");
 
 		Loop1: while (true) {
 
-			System.out.print("ID ÀÔ·Â : ");
+			System.out.print("ID ì…ë ¥ : ");
 			ed.setE_id(sc.nextLine());
 
-			System.out.print("PW ÀÔ·Â : ");
+			System.out.print("PW ì…ë ¥ : ");
 			ed.setE_pw(sc.nextLine());
 
 			sessionStorage.put(ed.getE_id(), ed.getE_pw());
 
 			while (true) {
-				System.out.println("·Î±×ÀÎ ÇÏ½Ã·Á¸é Y, µ¹¾Æ°¡½Ã·Á¸é NÀ» ´­·¯ÁÖ¼¼¿ä");
+				System.out.println("ë¡œê·¸ì¸ í•˜ì‹œë ¤ë©´ Y, ëŒì•„ê°€ì‹œë ¤ë©´ Nì„ ëˆŒëŸ¬ì£¼ì„¸ìš”");
 				String value = ScanUtil.nextLine();
 				loginCount++;
 
@@ -67,18 +67,18 @@ public class LoginService {
 					if (value.equalsIgnoreCase("Y")) {
 
 						if (loginCount == 3) {
-							System.out.println("3È¸ÀÌ»ó Á¤º¸¸¦ Àß¸ø ÀÔ·ÂÇÏ¿´½À´Ï´Ù.");
+							System.out.println("3íšŒì´ìƒ ì •ë³´ë¥¼ ì˜ëª» ì…ë ¥í•˜ì˜€ìŠµë‹ˆë‹¤.");
 							System.out.println();
-							System.out.println("10ÃÊµ¿¾È ·Î±×ÀÎÀÌ Á¦ÇÑ µË´Ï´Ù.");
+							System.out.println("10ì´ˆë™ì•ˆ ë¡œê·¸ì¸ì´ ì œí•œ ë©ë‹ˆë‹¤.");
 							LoginRetry();
 						}
 						result = dao.login(ed.getE_id(), ed.getE_pw());
 						String job = (String) result.get("E_JOB");
 						eld.setE_job(job);
 						if (result == null) {
-							System.out.println("ID³ª PW¸¦ È®ÀÎÇØÁÖ¼¼¿ä.");
+							System.out.println("IDë‚˜ PWë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”.");
 						} else {
-							System.out.printf("%3s °èÁ¤À¸·Î Á¢¼ÓÇÏ¿´½À´Ï´Ù.", eld.getE_job());
+							System.out.printf("%3s ê³„ì •ìœ¼ë¡œ ì ‘ì†í•˜ì˜€ìŠµë‹ˆë‹¤.", eld.getE_job());
 							break Loop1;
 						}
 
@@ -86,15 +86,15 @@ public class LoginService {
 						TotalView lv = TotalView.getInstance();
 						lv.init();
 					} else {
-						System.out.println("Àß¸øµÈ°ªÀ» ÀÔ·ÂÇÏ¿´½À´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+						System.out.println("ì˜ëª»ëœê°’ì„ ì…ë ¥í•˜ì˜€ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 						continue;
 					}
 
 				} catch (NumberFormatException e) {
-					System.out.println("Àß¸øµÈ °ªÀÌ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.");
+					System.out.println("ì˜ëª»ëœ ê°’ì´ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
 					continue Loop1;
 				} catch (Exception e) {
-					System.out.println("ID³ª PW¸¦ È®ÀÎÇØÁÖ¼¼¿ä. ");
+					System.out.println("IDë‚˜ PWë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”. ");
 					continue Loop1;
 				}
 
@@ -107,7 +107,7 @@ public class LoginService {
 
 	private void LoginRetry() {
 		for (int i = 0; i < 10; i++) {
-			System.out.print("¡á");
+			System.out.print("â– ");
 			try {
 				Thread.sleep(1000);
 
@@ -119,10 +119,10 @@ public class LoginService {
 		System.out.println();
 	}
 
-//-----------------------------------------------------------------¿©±â±îÁö ·Î±×ÀÎ ¸Ş¼Òµå
+//-----------------------------------------------------------------ì—¬ê¸°ê¹Œì§€ ë¡œê·¸ì¸ ë©”ì†Œë“œ
 	public Map<String, Object> isDuplicate(String id) {
 		result = dao.select(id);
 		return result;
 	}
-//-----------------------------------------------------------------Áßº¹µÈ id °Ë»ç ¸Ş¼Òµå	
+//-----------------------------------------------------------------ì¤‘ë³µëœ id ê²€ì‚¬ ë©”ì†Œë“œ	
 }

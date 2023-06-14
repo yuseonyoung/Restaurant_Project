@@ -6,13 +6,19 @@ import java.util.Map;
 
 import JDBCUtil.JdbcUtil;
 
+ kby
+=======
 
+ main
 public class LoginDAO {
 
-	// ½Ì±ÛÅæ
+	// ì‹±ê¸€í†¤
 	private static LoginDAO instance = null;
 
+
+
 	private LoginDAO() {}
+
 
 	public static LoginDAO getInstance() {
 		if (instance == null) {
@@ -20,29 +26,37 @@ public class LoginDAO {
 		}
 		return instance;
 	}
-//---------------------------------------------------------------------¿©±â±îÁö ½Ì±ÛÅæ
+//---------------------------------------------------------------------ì—¬ê¸°ê¹Œì§€ ì‹±ê¸€í†¤
 
 	JdbcUtil jdbc = JdbcUtil.getInstance();
-	// id¿Í pw±îÁö °Ë»çÇÏ´Â ¸Ş¼­µå
+
+
+	// idì™€ pwê¹Œì§€ ê²€ì‚¬í•˜ëŠ” ë©”ì„œë“œ
 	public Map<String, Object> login(String id, String pass) {
-		String sql = " SELECT E_ID, E_PW, E_JOB FROM EMP WHERE E_ID = ?";
+	String sql = " SELECT E_ID, E_PW, E_JOB FROM EMP WHERE E_ID = ?";
 		sql = sql + " AND E_PW = ? ";
+
+
 
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
 		param.add(pass);
-		// Dao¿¡¼­ utilÀ» È£ÃâÇÔ
-		 return jdbc.selectOne(sql, param);
+		// Daoì—ì„œ utilì„ í˜¸ì¶œí•¨
+
+		return jdbc.selectOne(sql, param);
 	}
-//---------------------------------------------------------------------- ¿©±â±îÁö id¿Ípw¸¦ ÀÔ·Â¹Ş¾Æ Ã³¸®ÇÒ ¼ö ÀÖ´Â Äõ¸®¹®À» ¸¸µé¾î jdbc¿¡ ³Ñ°ÜÁÖ´Â ¸Ş¼Òµå
-	
-	// id¸¸ °¡Áö°í °Ë»ç¸¦ ÇÏ´Â ¸Ş¼­µå
+//---------------------------------------------------------------------- ì—¬ê¸°ê¹Œì§€ idì™€pwë¥¼ ì…ë ¥ë°›ì•„ ì²˜ë¦¬í•  ìˆ˜ ìˆëŠ” ì¿¼ë¦¬ë¬¸ì„ ë§Œë“¤ì–´ jdbcì— ë„˜ê²¨ì£¼ëŠ” ë©”ì†Œë“œ
+
+	// idë§Œ ê°€ì§€ê³  ê²€ì‚¬ë¥¼ í•˜ëŠ” ë©”ì„œë“œ
 	public Map<String, Object> select(String id) {
 		String sql = "SELECT * FROM EMP WHERE E_ID = ? ";
 		List<Object> param = new ArrayList<Object>();
 		param.add(id);
-		// jdbcÀÇ selectoneÀ» »ç¿ëÇÏ·Á°í À§¿¡ÀÖ´Â ¸ğµç°ÍÀ» ¸¸µç°ÍÀÓ.
-		 return jdbc.selectOne(sql, param);
+		// jdbcì˜ selectoneì„ ì‚¬ìš©í•˜ë ¤ê³  ìœ„ì—ìˆëŠ” ëª¨ë“ ê²ƒì„ ë§Œë“ ê²ƒì„.
+
+		return jdbc.selectOne(sql, param);
+
 	}
-//-----------------------------------------------------------------------¿©±â±îÁö id¸¦ ÀÔ·Â¹Ş¾Æ Ã³¸®ÇÒ ¼ö ÀÖ´Â Äõ¸®¹®À» ¸¸µé¾î jdbc¿¡ ³Ñ°ÜÁÖ´Â ¸Ş¼Òµå 
+//-----------------------------------------------------------------------ì—¬ê¸°ê¹Œì§€ idë¥¼ ì…ë ¥ë°›ì•„ ì²˜ë¦¬í•  ìˆ˜ ìˆëŠ” ì¿¼ë¦¬ë¬¸ì„ ë§Œë“¤ì–´ jdbcì— ë„˜ê²¨ì£¼ëŠ” ë©”ì†Œë“œ 
 }
+

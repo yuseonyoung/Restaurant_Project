@@ -1,6 +1,8 @@
 package DTO;
 
 public class IngredientDTO {
+
+	
 	private String i_name;
 	private int i_inven;
 
@@ -18,5 +20,6 @@ public class IngredientDTO {
 
 	public void setI_inven(int i_inven) {
 		this.i_inven = i_inven;
+
 	}
 }
