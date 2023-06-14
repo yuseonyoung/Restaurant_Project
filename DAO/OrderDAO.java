@@ -21,16 +21,16 @@ public class OrderDAO {
 		}
 		return instance;
 	}
-//-----------------------------------------------------------------------------------¿©±â ±îÁö ½Ì±¼Åæ
+//-----------------------------------------------------------------------------------ì—¬ê¸° ê¹Œì§€ ì‹±êµ´í†¤
 	
 	JdbcUtil jdbc = JdbcUtil.getInstance();
-	
+
 	public List<Map<String, Object>> selectList(){
 		String sql = "  SELECT I_ID, I_NAME, I_INVEN,  I_ORIGIN " + 
 				" FROM INGREDIENT WHERE I_INVEN <= 10 ";
 		return (List<Map<String, Object>>) jdbc.selectList(sql);
 	}
-	
+
 	public List<Map<String, Object>> orderAllList(){
 		String sql = " SELECT A.I_ID, A.I_NAME, A.I_INVEN, A.I_ORIGIN, TO_CHAR(B.P_EXPDATE, 'YYYY/MM/DD') AS P_EXPDATE " + 
 				"FROM INGREDIENT A JOIN PURCHASE B ON A.I_ID = B.I_ID(+) ";
@@ -48,14 +48,12 @@ public class OrderDAO {
 	public int orderInsert(String name, Object qty){
 		String key="";
 		Map<String,String> info = login.getSessionStorage();
-		System.out.println(info);
+
 		for (Map.Entry<String, String> entry : info.entrySet()) {
 		    	key = entry.getKey();	    
 		}
-
-		
 		String sql = " INSERT INTO PURCHASE (P_ID, E_ID, I_ID, P_BDATE, P_EXPDATE, P_QTY) " + 
-				" VALUES (LPAD(P_ID_SEQ.NEXTVAL, 2, '0'), ? , (select I_ID from INGREDIENT " + 
+				" VALUES ( P_ID_SEQ.NEXTVAL, ? , (select I_ID from INGREDIENT " + 
 				" WHERE I_NAME = ?), SYSDATE, SYSDATE + 7 , ?) ";
 		List<Object> param = new ArrayList<Object>();
 		
@@ -67,7 +65,27 @@ public class OrderDAO {
 	}
 	
 	public List<Map<String, Object>> deleteList() {
-		String sql = " select * from order_view where p_expdate < sysdate ";
+		String sql = " SELECT P_ID, I_NAME, TO_CHAR(P_BDATE, 'YYYY-MM-DD') AS P_BDATE, TO_CHAR(P_EXPDATE, 'YYYY-MM-DD') AS P_EXPDATE, P_QTY "
+				+ "FROM order_view WHERE P_EXPDATE < SYSDATE ";
 		return (List<Map<String, Object>>) jdbc.selectList(sql);
 	}
+	
+	public List<Map<String, Object>> orderDelete(Integer id , String name) throws Exception{
+		String sql = " DELETE FROM PURCHASE " + 
+				" WHERE P_ID = ? AND I_ID IN ( " + 
+				"  SELECT I_ID " + 
+				"  FROM INGREDIENT " + 
+				"  WHERE I_NAME = ? " + 
+				" ) AND P_EXPDATE < SYSDATE ";
+		
+		List<Object> param = new ArrayList<Object>();
+		param.add(id);
+		param.add(name);
+		return (List<Map<String, Object>>) jdbc.deletetList(sql, param);
+	}
+	public int deleteAllValue() {
+		String sql = " DELETE FROM PURCHASE WHERE P_EXPDATE < SYSDATE ";
+		return jdbc.deleteAllValue(sql);
+	}
+
 }

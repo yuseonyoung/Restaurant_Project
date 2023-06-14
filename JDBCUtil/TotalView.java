@@ -2,16 +2,13 @@ package JDBCUtil;
 
 import java.util.Map;
 import java.util.Scanner;
-
-import DTO.EmployeeDTO;
 import Service.LoginService;
 import Service.OrderService;
 
 public class TotalView {
 	Scanner sc = new Scanner(System.in);
 	Map<String, Object> result;
-	LoginService login = LoginService.getInstance();
-	OrderService order = OrderService.getInstance();
+	OrderService os = OrderService.getInstance();
 	
 	private static TotalView instance = null;
 	private TotalView() {}
@@ -23,154 +20,178 @@ public class TotalView {
 		return instance;
 	}
 	
-	public void init() throws ClassNotFoundException {
+	public void init() {
 		int num = 0;
 		while (true) {
-			System.out.println("¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢            ·¹½ºÅä¶û °ü¸® ½Ã½ºÅÛ ÀÔ´Ï´Ù                       ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢          ¿øÇÏ½Ã´Â ¸ğµå¸¦ ¼ıÀÚ·Î ¼±ÅÃÇØ ÁÖ¼¼¿ä.   	 ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢   1.¼Õ´Ô                                             2. Á÷¿ø        ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥");
+			System.out.println("â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚            ë ˆìŠ¤í† ë‘ ê´€ë¦¬ ì‹œìŠ¤í…œ ì…ë‹ˆë‹¤                                 â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚          ì›í•˜ì‹œëŠ” ëª¨ë“œë¥¼ ìˆ«ìë¡œ ì„ íƒí•´ ì£¼ì„¸ìš”.   	     â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚   1.ì†ë‹˜                                             2. ì§ì›                        â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â”‚                                            â”‚");
+			System.out.println("â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜");
 
 			try {
-				num = Integer.valueOf(sc.nextLine());
+				num = ScanUtil.nextInt();
 				break;
 			} catch (NumberFormatException e) {
-				System.out.println("Àß¸øµÈ °ªÀÌ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.");
+				System.out.println("ì˜ëª»ëœ ê°’ì´ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
 				continue;
 			}
 
 		}
 		switch (num) {
-		case 1:
-		case 2:
-			System.out.println("¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢       Á÷¿øÀÇ ¾ÆÀÌµğ¿Í ÆĞ½º¿öµå¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä        	 ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢       ID :                         	     ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢       PW :                                 ¦¢");
-			System.out.println("¦¢    	                                     ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¢                                            ¦¢");
-			System.out.println("¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥");
-			
-		
-			result = login.login();
-			managerSelect();
-			
-			break;
-	
-		default:
-			System.out.println("Àß¸øµÈ °ªÀ» ÀÔ·Â ÇÏ¿´½À´Ï´Ù.");
+			case 1:
+				System.out.println("        <å‘³ å‘³ ë ˆìŠ¤í† ë‘ì— ì˜¤ì‹ ê±¸ í™˜ì˜í•©ë‹ˆë‹¤.>  ");
+				System.out.println("â¢€â£ â£¾â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â €â €â €â €â£ â£¤â£¶â£¶");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â €â €â €â¢°â£¿â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£§â£€â£€â£¾â£¿â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â¡â ‰â ›â¢¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â¡¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â €â €â €â ˆâ ›â¢¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â ¿â ›â ‰â â €â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£§â¡€â €â €â €â €â ™â ¿â ¿â ¿â »â ¿â ¿â Ÿâ ¿â ›â ‰â €â €â €â €â €â£¸â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£·â£„â €â¡€â €â €â €â €â €â €â €â €â €â €â €â €â €â €â¢€â£´â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â â €â €â €â €â €â €â €â €â €â €â €â €â €â €â  â£´â£¿â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â¡Ÿâ €â €â¢°â£¹â¡†â €â €â €â €â €â €â£­â£·â €â €â €â ¸â£¿â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â ƒâ €â €â ˆâ ‰â €â €â ¤â „â €â €â €â ‰â â €â €â €â €â¢¿â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â¢¾â£¿â£·â €â €â €â €â¡ â ¤â¢„â €â €â €â  â£¿â£¿â£·â €â¢¸â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â¡€â ‰â €â €â €â €â €â¢„â €â¢€â €â €â €â €â ‰â ‰â â €â €â£¿â£¿â£¿");
+				System.out.println("â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£¿â£§â €â €â €â €â €â €â €â ˆâ €â €â €â €â €â €â €â €â €â €â¢¹â£¿â£¿");
+				
+				
+				break;
+			case 2:
+				while(true) {
+					System.out.println("â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â”‚       ì§ì›ì˜ ì•„ì´ë””ì™€ íŒ¨ìŠ¤ì›Œë“œë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”        	     â”‚");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â”‚       ID :                         	     â”‚");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â”‚       PW :                                 â”‚");
+					System.out.println("â”‚    	                                     â”‚");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â”‚                                            â”‚");
+					System.out.println("â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜");
+					
+					LoginService login = LoginService.getInstance();
+					result = login.login();
+					if(result != null) {						
+						managerSelect();
+						break;
+					}else {
+						System.out.println("IDì™€ Pwê°€ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤ ë‹¤ì‹œ ì…ë ¥ í•´ì£¼ì„¸ìš”.");
+					}
+					
+					}
+				break;
+			default:
+				System.out.println("ì˜ëª»ëœ ê°’ì„ ì…ë ¥ í•˜ì˜€ìŠµë‹ˆë‹¤.");
 		}
-		
 	}
 
 	public void managerSelect() {
 		int num = 0;
 		while (true) {
 			System.out.println("                                     ");
-			System.out.println("  1. ½ÄÀç·á °ü¸®                                          ");
+			System.out.println("  1. ì‹ì¬ë£Œ ê´€ë¦¬                                                        ");
 			System.out.println("                                     ");
-			System.out.println("  2. À½½Ä °ü¸®                                             ");
+			System.out.println("  2. ìŒì‹ ê´€ë¦¬                                                           ");
 			System.out.println("                                     ");
 			
 	
-			if(result.get("E_JOB").equals("¸Å´ÏÀú")) {
-				System.out.println("  3. ¸ÅÃâ °ü¸®                                             ");
+			if(result.get("E_JOB").equals("ë§¤ë‹ˆì €")) {
+				System.out.println("  3. ë§¤ì¶œ ê´€ë¦¬                                                           ");
 				System.out.println("                                     ");
 			}
 				
-			else if(result.get("E_JOB").equals("Á¡Àå")) {
-				System.out.println("  3. ¸ÅÃâ °ü¸®                                              ");
+			else if(result.get("E_JOB").equals("ì ì¥")) {
+				System.out.println("  3. ë§¤ì¶œ ê´€ë¦¬                                                           ");
 				System.out.println("                                     ");
-				System.out.println("  4. Á÷¿ø °ü¸®                                          \n");
+				System.out.println("  4. ì§ì› ê´€ë¦¬                                                           \n");
 			}
 			
 			try {
-				System.out.println("¿øÇÏ½Ã´Â °ü¸®±â´ÉÀ» ¼ıÀÚ·Î ÀÔ·ÂÇØ ÁÖ¼¼¿ä : ");
+				System.out.println("ì›í•˜ì‹œëŠ” ê´€ë¦¬ê¸°ëŠ¥ì„ ìˆ«ìë¡œ ì…ë ¥í•´ ì£¼ì„¸ìš” : ");
 				num = Integer.valueOf(sc.nextLine());
 				break;
 			} catch (NumberFormatException e) {
-				System.out.println("Àß¸øµÈ °ªÀÌ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.");
+				System.out.println("ì˜ëª»ëœ ê°’ì´ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
 				continue;
 			}
 		}
 		switch (num) {
 		case 1:
-			
 			while (true) {
 				System.out.println("                                     ");
-				System.out.println("  0. µ¹¾Æ°¡±â                                              ");
+				System.out.println("  0. ëŒì•„ê°€ê¸°                                                            ");
 				System.out.println("                                     ");
-				System.out.println("  1. ½ÄÀç·á Á¶È¸                                           ");
+				System.out.println("  1. ì‹ì¬ë£Œ ì¡°íšŒ                                                        ");
 				System.out.println("                                     ");
 				
 				
-				if(result.get("E_JOB").equals("Á¡Àå") || result.get("E_JOB").equals("¸Å´ÏÀú")) {
-					System.out.println("  2. ½ÄÀç·á ¹ßÁÖ                                           ");
+				if(result.get("E_JOB").equals("ì ì¥") || result.get("E_JOB").equals("ë§¤ë‹ˆì €")) {
+					System.out.println("  2. ì‹ì¬ë£Œ ë°œì£¼                                                        ");
 					System.out.println("                                     ");
-					System.out.println("  3. ½ÄÀç·á Æó±â                                           ");
+					System.out.println("  3. ì‹ì¬ë£Œ íê¸°                                                        ");
 					System.out.println("                                     ");
 				}
-				
-				order.selectOrder();
-				System.out.println();
 				try {
-					System.out.print("¿øÇÏ½Ã´Â ±â´ÉÀ» ¼ıÀÚ·Î ÀÔ·ÂÇØ ÁÖ¼¼¿ä : ");
+					OrderService order = OrderService.getInstance();
+					order.selectOrder();
+					System.out.println();
+					System.out.print("ì›í•˜ì‹œëŠ” ê¸°ëŠ¥ì„ ìˆ«ìë¡œ ì…ë ¥í•´ ì£¼ì„¸ìš” : ");
 					int value = Integer.valueOf(sc.nextLine());
 					switch (value) {
 					case 1:
-						order.OrderList();
+						os.OrderList();
 						break;
 					case 2:
-						order.ingredientOrder();
-						System.out.println("¹ßÁÖ°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
+						os.ingredientOrder();
 						break;
 					case 3:
-						order.OrderDelete();
+						os.OrderDelete();
 						break;
 					case 0:
 						managerSelect();
+						break;
 					default:
-						System.out.println("Àß¸øµÈ °ªÀÌ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.");
+						System.out.println("ì˜ëª»ëœ ê°’ì´ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
 						break;
 					}
 					break;
 				} catch (NumberFormatException e) {
-					System.out.println("Àß¸øµÈ °ªÀÌ ÀÔ·ÂµÇ¾ú½À´Ï´Ù.");
+					System.out.println("ì˜ëª»ëœ ê°’ì´ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
 					continue;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			break;
 		case 2:
-			System.out.println("¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
-			System.out.println("¦¢                                     ¦¢");
-			System.out.println("¦¢  1. ¿¹¾à Á¶È¸   ±â´É ±¸Çö                               ¦¢");
-			System.out.println("¦¢                                     ¦¢");
-			System.out.println("¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥");
+			System.out.println("â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”");
+			System.out.println("â”‚                                     â”‚");
+			System.out.println("â”‚  1. ì˜ˆì•½ ì¡°íšŒ   ê¸°ëŠ¥ êµ¬í˜„                                           â”‚");
+			System.out.println("â”‚                                     â”‚");
+			System.out.println("â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜");
 			break;
 		case 3:
-			System.out.println("¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤");
-			System.out.println("¦¢                                     ¦¢");
-			System.out.println("¦¢  1. Á÷¿ø Á¶È¸  ±â´É ±¸Çö                                ¦¢");
-			System.out.println("¦¢                                     ¦¢");
-			System.out.println("¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥");
+			System.out.println("â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”");
+			System.out.println("â”‚                                     â”‚");
+			System.out.println("â”‚  1. ì§ì› ì¡°íšŒ  ê¸°ëŠ¥ êµ¬í˜„                                            â”‚");
+			System.out.println("â”‚                                     â”‚");
+			System.out.println("â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜");
 			break;
 		default:
-			System.out.println("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+			System.out.println("ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 			break;
 		}
 

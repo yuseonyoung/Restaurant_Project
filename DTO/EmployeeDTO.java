@@ -2,12 +2,10 @@ package DTO;
 
 public class EmployeeDTO {
 	private String e_id;
-	private String e_name;
-	private String e_num;
-	private String e_hiredate;
-	private int e_sal;
-	private String e_passwd;
-	private String e_rank;
+	private String e_pw;
+	private String e_job;
+	
+
 	public EmployeeDTO(){}
 	
 	public String getE_id() {
@@ -16,17 +14,19 @@ public class EmployeeDTO {
 	public void setE_id(String e_id) {
 		this.e_id = e_id;
 	}
-	public String getE_passwd() {
-		return e_passwd;
+
+	public String getE_pw() {
+		return e_pw;
 	}
-	public void setE_passwd(String e_passwd) {
-		this.e_passwd = e_passwd;
+	public void setE_pw(String e_pw) {
+		this.e_pw = e_pw;
 	}
-	public String getE_rank() {
-		return e_rank;
+	public String getE_job() {
+		return e_job;
 	}
-	public void setE_rank(String e_rank) {
-		this.e_rank = e_rank;
+	public void setE_job(String e_job) {
+		this.e_job = e_job;
+
 	}
 	
 }

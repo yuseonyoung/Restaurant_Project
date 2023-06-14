@@ -3,7 +3,7 @@ package JDBCUtil;
 import java.util.Scanner;
 
 public class ScanUtil {
-	// ½ºÄ³³Ê¸¦ ¼Õ½±°Ô »ç¿ëÇÒ ¼ö ÀÖ´Â static ¸Ş¼­µå¸¦ °¡Áö°íÀÖÀ½
+	// ìŠ¤ìºë„ˆë¥¼ ì†ì‰½ê²Œ ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” static ë©”ì„œë“œë¥¼ ê°€ì§€ê³ ìˆìŒ
 	static Scanner sc = new Scanner(System.in);
 	public static String nextLine() {
 		return sc.nextLine();
@@ -14,7 +14,9 @@ public class ScanUtil {
 				int result = Integer.valueOf(sc.nextLine());
 				return result;
 			}catch (NumberFormatException e) {
-				System.out.println("Àß¸ø ÀÔ·Â!!");
+
+				System.out.println("ì˜ëª»ëœ ì…ë ¥ê°’ì…ë‹ˆë‹¤.");
+
 			}
 		}
 	}

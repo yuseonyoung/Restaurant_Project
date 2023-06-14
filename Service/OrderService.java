@@ -1,90 +1,223 @@
 package Service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import DAO.OrderDAO;
-import DTO.OrderDTO;
+import DTO.IngredientDTO;
+import DTO.PurchaseDTO;
 import JDBCUtil.ScanUtil;
+import JDBCUtil.TotalView;
 
 public class OrderService {
-	
+
 	Scanner sc = new Scanner(System.in);
-	OrderDTO od = new OrderDTO();
-	
-	
-	private static OrderService instance= null;
-	private OrderService() {}
-	
+	IngredientDTO od = new IngredientDTO();
+	PurchaseDTO pc = new PurchaseDTO();
+
+	private static OrderService instance = null;
+
+	private OrderService() {
+	}
+
 	public static OrderService getInstance() {
 		if (instance == null) {
 			instance = new OrderService();
 		}
 		return instance;
 	}
-//-------------------------------------------------------½Ì±ÛÅæ ÆĞÅÏ
-	
+//-------------------------------------------------------ì‹±ê¸€í†¤ íŒ¨í„´
+
 	OrderDAO dao = OrderDAO.getInstance();
 
-	public void selectOrder(){
-		int count =1;
+	public void selectOrder() throws Exception {
+		int count = 1;
 		List<Map<String, Object>> list = dao.selectList();
-		
-		System.out.println("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡");
-		System.out.println("               Àç°í°¡ ¾ó¸¶ ³²Áö ¾ÊÀº ½ÄÀç·á ¸ñ·Ï ");
-		System.out.println();
-		System.out.println("  ¼ø¹ø     ½ÄÀç·áÄÚµå          ½ÄÀç·á¸í       Àç°í        ¿ø»êÁö");
-		for(Map<String, Object> n : list) {
-		System.out.printf("%3d  %-11s %3s      %5d°³        %3s \n",(count++),n.get("I_ID"),n.get("I_NAME")
-				,Integer.parseInt((String.valueOf(n.get("I_INVEN"))).trim()),n.get("I_ORIGIN"));
-		System.out.println("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡");
-		
-		
+
+		if (list != null) {
+			System.out.println("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+			System.out.println("               ì¬ê³ ê°€ ì–¼ë§ˆ ë‚¨ì§€ ì•Šì€ ì‹ì¬ë£Œ ëª©ë¡ ");
+			System.out.println();
+			System.out.println("  ìˆœë²ˆ     ì‹ì¬ë£Œì½”ë“œ          ì‹ì¬ë£Œëª…       ì¬ê³         ì›ì‚°ì§€");
+			for (Map<String, Object> n : list) {
+				System.out.printf("%3d  %-11s %3s      %5dê°œ        %3s \n", (count++), n.get("I_ID"), n.get("I_NAME"),
+						Integer.parseInt((String.valueOf(n.get("I_INVEN"))).trim()), n.get("I_ORIGIN"));
+				System.out.println("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+			}
+		} else {
+			System.out.println("ì‹ì¬ë£Œê°€ ì¶©ë¶„í•œ ìƒíƒœì…ë‹ˆë‹¤.");
 		}
 	}
-//------------------------------------------------------Àç°í¼ö·®ÀÌ ÀûÀº ½ÄÀç·á ¸ñ·Ï º¸¿©ÁÖ±â	
+
+//------------------------------------------------------ì¬ê³ ìˆ˜ëŸ‰ì´ ì ì€ ì‹ì¬ë£Œ ëª©ë¡ ë³´ì—¬ì£¼ê¸°	
 	public void ingredientOrder() {
-		System.out.print("±¸ÀÔÇÏ½Ç ½ÄÀç·á¸íÀ» ÀÔ·Â ÇÏ¼¼¿ä : ");
-		String name = sc.nextLine();
-		od.setI_name(name);
-		
-		System.out.print("±¸ÀÔÇÏ½Ç ¼ö·®À» ÀÔ·Â ÇÏ¼¼¿ä : ");
-		int num = ScanUtil.nextInt();
-		od.setI_inven(num);
-		
-		dao.orderInsert(od.getI_name(), od.getI_inven());
-		
+		TotalView tv = TotalView.getInstance();
+		Loop1: while (true) {
+			System.out.print("êµ¬ì…í•˜ì‹¤ ì‹ì¬ë£Œëª…ì„ ì…ë ¥ í•˜ì„¸ìš” : ");
+			String name = sc.nextLine();
+			od.setI_name(name);
+
+			System.out.print("êµ¬ì…í•˜ì‹¤ ìˆ˜ëŸ‰ì„ ì…ë ¥ í•˜ì„¸ìš” : ");
+			int num = ScanUtil.nextInt();
+			od.setI_inven(num);
+
+			dao.orderInsert(od.getI_name(), od.getI_inven());
+
+			System.out.println("ë°œì£¼ê°€ ì™„ë£Œ ë˜ì—ˆìŠµë‹ˆë‹¤.");
+			System.out.println();
+			while (true) {
+				System.out.println("0. ëŒì•„ê°€ê¸°");
+				System.out.println("1. ì‹ì¬ë£Œ ì¶”ê°€ ë°œì£¼");
+				System.out.println("2. ì¢…ë£Œí•˜ê¸°");
+				System.out.print("ì›í•˜ì‹œëŠ” ê¸°ëŠ¥ì„ ìˆ«ìë¡œ ì…ë ¥ í•´ì£¼ì„¸ìš” : ");
+				int input = ScanUtil.nextInt();
+				if (input == 0) {
+					tv.managerSelect();
+				} else if (input == 1) {
+					continue Loop1;
+				} else if (input == 2) {
+					System.out.println("ê´€ë¦¬ ì‹œìŠ¤í…œì„ ì¢…ë£Œí•©ë‹ˆë‹¤.");
+					System.exit(0);
+				} else {
+					System.out.println("ì˜ëª»ëœ ê°’ì„ ì…ë ¥ í•˜ì˜€ìŠµë‹ˆë‹¤.");
+					continue;
+				}
+			}
+		}
 	}
-	
-	public void OrderList(){
-		int count =1;
+
+	public void OrderList() {
+		int count = 1;
+		TotalView tv = TotalView.getInstance();
 		List<Map<String, Object>> list = dao.orderAllList();
-		
-		System.out.println("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡");
-		System.out.println("                                           ½ÄÀç·á ¸ñ·Ï ");
+
+		System.out.println("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+		System.out.println("                                           ì‹ì¬ë£Œ ëª©ë¡ ");
 		System.out.println();
-		System.out.println("  ¼ø¹ø     ½ÄÀç·áÄÚµå          ½ÄÀç·á¸í       Àç°í        ¿ø»êÁö        À¯Åë±âÇÑ        º¸°ü");
-		for(Map<String, Object> n : list) {
-		System.out.printf("%3d  %-11s %3s      %5d°³        %3s      %3s      %3s        \n",(count++),n.get("I_ID"),n.get("I_NAME")
-				,Integer.parseInt((String.valueOf(n.get("I_INVEN"))).trim()),n.get("I_ORIGIN")
-				,n.get("P_EXPDATE"),n.get("I_STOR"));
-		System.out.println("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡");
+		System.out.println("  ìˆœë²ˆ     ì‹ì¬ë£Œì½”ë“œ          ì‹ì¬ë£Œëª…       ì¬ê³         ì›ì‚°ì§€        ìœ í†µê¸°í•œ        ë³´ê´€");
+		for (Map<String, Object> n : list) {
+			System.out.printf("%3d  %-11s %3s      %5dê°œ        %3s      %3s      %3s        \n", (count++),
+					n.get("I_ID"), n.get("I_NAME"), Integer.parseInt((String.valueOf(n.get("I_INVEN"))).trim()),
+					n.get("I_ORIGIN"), n.get("P_EXPDATE"), n.get("I_STOR"));
+			System.out.println("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+		}
 		
+		System.out.println();
+		while(true) {
+			System.out.println("0. ëŒì•„ê°€ê¸°");
+			System.out.println("1. ì¢…ë£Œí•˜ê¸°");
+			System.out.print("ì›í•˜ì‹œëŠ” ê¸°ëŠ¥ì„ ìˆ«ìë¡œ ì…ë ¥í•´ì£¼ì„¸ìš” : ");
+			int num = ScanUtil.nextInt();
 		
+			if(num==0) {
+				tv.managerSelect();
+				break;
+			}else if(num==1) {
+				System.exit(0);
+			} 
 		}
 	}
-	public void OrderDelete() {
-		int count =1;
-		System.out.println("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡");
-		System.out.println("À¯Åë±âÇÑÀÌ Áö³­ ½ÄÀç·á ¸ñ·Ï");
-		System.out.println("  ¼ø¹ø     ½ÄÀç·áÄÚµå          ½ÄÀç·á¸í     ±¸¸ÅÀÏÀÚ       À¯Åë±âÇÑ     Àç°í");
+
+	public void OrderDelete() throws Exception {
+		TotalView tv = TotalView.getInstance();
+		int count = 1;
 		List<Map<String, Object>> list = dao.deleteList();
-		for(Map<String, Object> n : list) {
-			System.out.printf("%3d  %3s       %-11s %3s      %5s    %3s   %3s \n",(count++),n.get("P_ID"),n.get("I_ID")
-					,n.get("I_NAME"),n.get("P_BDATE"),n.get("P_EXPDATE"),n.get("P_QTY"));
+		if (list != null) {
+			System.out.println("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+			System.out.println("ìœ í†µê¸°í•œì´ ì§€ë‚œ ì‹ì¬ë£Œ ëª©ë¡");
+			System.out.println("  ìˆœë²ˆ     ë°œì£¼ì„œì½”ë“œ          ì‹ì¬ë£Œëª…     êµ¬ë§¤ì¼ì       ìœ í†µê¸°í•œ     ì¬ê³ ");
+			for (Map<String, Object> n : list) {
+				System.out.printf("%6d  %3s       %-11s   %10s      %10s    %10s  \n", (count++), n.get("P_ID"),
+						n.get("I_NAME"), n.get("P_BDATE"), n.get("P_EXPDATE"), n.get("P_QTY"));
+			}
+
+			while (true) {
+				
+				System.out.println("0. ëŒì•„ê°€ê¸°");
+				System.out.println("1. ìœ í†µê¸°í•œì´ ì§€ë‚œ ì‹ì¬ë£Œë¥¼ ì„ íƒí•˜ì—¬ íê¸°");
+				System.out.println("2. ìœ í†µê¸°í•œì´ ì§€ë‚œ ì‹ì¬ë£Œë¥¼ ì „ì²´ íê¸°");
+
+				System.out.print("ìˆ«ì ì…ë ¥ : ");
+				int num = ScanUtil.nextInt();
+
+				if (num == 0) {
+					tv.managerSelect();
+				} else if (num == 1) {
+					selectDelete();
+					break;
+				} else if (num == 2) {
+					DeleteAll();
+					break;
+				} else {
+					System.out.println("ì˜ëª»ëœ ê°’ì„ ì…ë ¥ í•˜ì˜€ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•˜ì—¬ì£¼ì„¸ìš”.");
+					continue;
+				}
+			}
+		} else {
+			System.out.println("ìœ í†µê¸°í•œì´ ì§€ë‚œ ì‹ì¬ë£Œê°€ ì—†ìŠµë‹ˆë‹¤.");
+			System.out.println("0. ëŒì•„ê°€ê¸°");
+			System.out.println("1. ì¢…ë£Œí•˜ê¸°");
+			
+			while(true) {
+				System.out.print("ìˆ«ì ì…ë ¥ : ");
+				int num = ScanUtil.nextInt();
+	
+				if(num==0) {
+					tv.managerSelect();
+					break;
+				}else if(num==1) {
+					System.exit(0);
+				}else {
+					System.out.println("ì˜ëª»ëœ ê°’ì„ ì…ë ¥í•˜ì˜€ìŠµë‹ˆë‹¤.");
+					System.out.println("ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”");
+					continue;
+				}
+			}
 		}
-		
+	}
+
+	public void selectDelete() throws Exception {
+
+		while (true) {
+			if (dao.deleteList() != null) {
+				System.out.print("ì‚­ì œí•˜ì‹¤ ë°œì£¼ì„œì½”ë“œë¥¼ ì…ë ¥í•˜ì„¸ìš” : ");
+				pc.setP_id(ScanUtil.nextInt());
+				System.out.print("ì‚­ì œí•˜ì‹¤ ì‹ì¬ë£Œëª…ì„ ì…ë ¥í•˜ì„¸ìš” : ");
+				od.setI_name(ScanUtil.nextLine());
+
+				dao.orderDelete(pc.getP_id(), od.getI_name());
+
+				System.out.println("ì‚­ì œ ë˜ì—ˆìŠµë‹ˆë‹¤ !");
+				System.out.println();
+				System.out.println("1. ëŒì•„ê°€ê¸°");
+				System.out.println("2. ì‹ì¬ë£Œ ì¶”ê°€ ì‚­ì œ");
+				System.out.println("3. ì‹œìŠ¤í…œì¢…ë£Œ");
+				System.out.println();
+				System.out.print("ì›í•˜ì‹œëŠ” ê¸°ëŠ¥ì„ ìˆ«ìë¡œ ì…ë ¥í•˜ì—¬ì£¼ì„¸ìš” : ");
+				int value = ScanUtil.nextInt();
+
+				if (value == 1) {
+					OrderDelete();
+					break;
+					
+				} else if (value == 2) {
+					continue;
+				} else if (value == 3) {
+					System.exit(0);
+				} else {
+					System.out.println("ì˜ëª»ëœ ê°’ì´ ì…ë ¥ ë˜ì—ˆìŠµë‹ˆë‹¤.");
+					continue;
+				}
+			} else {
+				System.out.println("ìœ í†µê¸°í•œì´ ì§€ë‚œ ì‹ì¬ë£Œê°€ ì—†ìŠµë‹ˆë‹¤.");
+			}
+		}
+	}
+
+	public void DeleteAll() throws Exception {
+		dao.deleteAllValue();
+		System.out.println("ëª¨ë“  ë°ì´í„°ê°€ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
+		OrderDelete();
 	}
 }

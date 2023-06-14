@@ -1,21 +1,19 @@
 package Controller;
 
+
 import Service.CookService;
 import Service.SalesService;
+import JDBCUtil.TotalView;
 
 public class MainController {
 	
 	public static void main(String[] args) {
-//
-//		TotalView lv = TotalView.getInstance();
-//
-//		try {
-//			lv.init();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		
-//		}
-//		
+
+		TotalView lv = TotalView.getInstance();
+
+		
+			lv.init();
+	
 		SalesService sa = SalesService.getInstance();
 		//sa.empSal();
 		
@@ -30,5 +28,5 @@ public class MainController {
 		
 		
 		
-	}
+  }
 }

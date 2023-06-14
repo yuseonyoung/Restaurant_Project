@@ -1,18 +1,25 @@
 package DTO;
 
 public class IngredientDTO {
-	private String i_id ="";
-	private String i_pw ="";
-	public String getI_id() {
-		return i_id;
+
+	
+	private String i_name;
+	private int i_inven;
+
+	public String getI_name() {
+		return i_name;
 	}
-	public void setI_id(String i_id) {
-		this.i_id = i_id;
+
+	public void setI_name(String i_name) {
+		this.i_name = i_name;
 	}
-	public String getI_pw() {
-		return i_pw;
+
+	public int getI_inven() {
+		return i_inven;
 	}
-	public void setI_pw(String i_pw) {
-		this.i_pw = i_pw;
+
+	public void setI_inven(int i_inven) {
+		this.i_inven = i_inven;
+
 	}
 }

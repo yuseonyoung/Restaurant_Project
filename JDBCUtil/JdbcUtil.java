@@ -6,20 +6,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JdbcUtil {
-	
-	/*
-	 * JDBC¸¦ »ç¿ëÇÏ¿© CRUD¸¦ È¿À²ÀûÀ¸·Î »ç¿ëÇÒ ¼ö ÀÖ´Â ¸Ş¼­µå¸¦ Æ÷ÇÔÇÑ class ¿©±â´Â ½Ì±ÛÅæ ÆĞÅÏÀ» Àû¿ëÇÑ´Ù.
-	 */
+
 	private static JdbcUtil instance = null;
 
+
 	private JdbcUtil() {}
+
 
 	public static JdbcUtil getInstance() {
 		if (instance == null) {
@@ -28,204 +26,100 @@ public class JdbcUtil {
 		return instance;
 	}
 
-// ---------------------------------------------------------------------------------------¿©±â±îÁö ½Ì±ÛÅæ
+// ---------------------------------------------------------------------------------------ì—¬ê¸°ê¹Œì§€ ì‹±ê¸€í†¤
 	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
-	private String user = "fp";
-	private String passwd = "java";
+	
+	private String user = "ysy02";
+	private String passwd = "7487";
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
-//	private Statement stmt = null;
 	private ResultSet rs = null;
-//----------------------------------------------------------------------------------------db¿¬°á¿¡ ÇÊ¿äÇÑ º¯¼ö¼±¾ğ
-	public Map<String, Object> selectOne(String sql) {
-		Map<String, Object> row = null;
+//----------------------------------------------------------------------------------------dbì—°ê²°ì— í•„ìš”í•œ ë³€ìˆ˜ì„ ì–¸
 
-		try {
-			conn = DriverManager.getConnection(url, user, passwd);
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
+//---------------------------------------------------------------------------------------í•œê°œì˜ ê°’ì„ ë°›ì•„ í•œí–‰ì„ ì¡°íšŒí•˜ëŠ” ë©”ì†Œë“œ
 
-			// MetaData : Å×ÀÌºíÀÇ Á¦¾à»çÇ×,±¸¼º,ÄÃ·³¸í,ÄÃ·³°¹¼ö¸¦ °¡Áö°íÀÖ´Â µ¥ÀÌÅÍ
-			// °á°úÁıÇÕÀÌ µé¾î¿À´Â ºÎºĞ
-			// ÄÃ·³ÀÇ¼ö,ÄÃ·³¸íÀ» ¾Ë±âÀ§ÇØ »ç¿ëÇÑ°ÍÀÌ MetaDataÀÓ
-			ResultSetMetaData rsmd = rs.getMetaData();
-			// ÄÃ·³ÀÇ¼ö
-			int columnCount = rsmd.getColumnCount();
-			// rs¿¡ µ¥ÀÌÅÍ°¡ 1°³¸¸ µé¾î°¥°Å¶ó 1°³°¡Á®¿Ã°ÍÀÓ
-			while (rs.next()) {
-				row = new HashMap<>();
-
-				for (int i = 0; i < columnCount; i++) {
-					// columnName -> ¿øº»Å×ÀÌºíÀÇ ÄÃ·³¸í
-					// ColumnLabel -> ÄÃ·³ÀÇ º°Äª
-					// º°ÄªÀÌ ¾øÀ¸¸é ¿øº» ÄÃ·³¸í
-					String key = rsmd.getColumnLabel(i);
-					// String key = rsmd.getColumnName(i);
-					// value °ªÀº rs¿¡¼­ °¡Á®¿Í¾ßÇÔ.
-					Object value = rs.getObject(i);
-					row.put(key, value);
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (Exception e) {
-				}
-			;
-			if (pstmt != null)
-				try {
-					pstmt.close();
-				} catch (Exception e) {
-				}
-			;
-			if (conn != null)
-				try {
-					conn.close();
-				} catch (Exception e) {
-				}
-			;
-		}
-		// 1°³ÀÇ °ªÀ» Ãâ·ÂÇÒ°Å´Ï list¾È¸¸µë
-		return row;
-	}
-//---------------------------------------------------------------------------------------ÇÑ°³ÀÇ °ªÀ» ¹Ş¾Æ ÇÑÇàÀ» Á¶È¸ÇÏ´Â ¸Ş¼Òµå
-	
 	public Map<String, Object> selectOne(String sql, List<Object> param) {
-		// ex) sql = "SELECT * FROM TBL_MEMBER WHERE MEM_ID=? AND MEM_PASS=?"
+		// ex) sql = "SELECT * FROM TBL_MEMBER WHERE MEM_ID=ã…0010 AND MEM_PASS=1234"
 
 		Map<String, Object> row = null;
-	
+
 		try {
-			
+
 			conn = DriverManager.getConnection(url, user, passwd);
+			
 			pstmt = conn.prepareStatement(sql);
-		
+
+
 			for (int i = 0; i < param.size(); i++) {
-				// ¿À¶óÅ¬ÀÌ±â ¶§¹®¿¡ 1¹øºÎÅÍ ½ÃÀÛÇØ¾ßµÊ ?¿¡ ´ëÀÀµÇ´Â ¼ıÀÚÀÓ
+				// ì˜¤ë¼í´ì´ê¸° ë•Œë¬¸ì— 1ë²ˆë¶€í„° ì‹œì‘í•´ì•¼ë¨ ?ì— ëŒ€ì‘ë˜ëŠ” ìˆ«ìì„
 				pstmt.setObject(i + 1, param.get(i));
 			}
-			
+      
 			rs = pstmt.executeQuery();
-			
-			 if (rs != null) {
-		            ResultSetMetaData rsmd = rs.getMetaData();
-		            int columnCount = rsmd.getColumnCount();
 
-		            while (rs.next()) {
-		            	row = new HashMap<>();
-		                for (int i = 0; i < columnCount; i++) {
-		                    String key = rsmd.getColumnLabel(i + 1);
-		                    Object value = rs.getObject(i + 1);
-		                    row.put(key, value);
-		                }
-		            }
-		        }						
+			if (rs != null) {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+
+				while (rs.next()) {
+					row = new HashMap<>();
+					for (int i = 0; i < columnCount; i++) {
+						String key = rsmd.getColumnLabel(i + 1);
+						Object value = rs.getObject(i + 1);
+						row.put(key, value);
+					}
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		}finally {
 			if (rs != null)
 				try {
 					rs.close();
-				} catch (Exception e) {
-				}
-			
+				} catch (Exception e) {}
 			if (pstmt != null)
 				try {
 					pstmt.close();
-				} catch (Exception e) {
-				}
-			
+				} catch (Exception e) {}
 			if (conn != null)
 				try {
 					conn.close();
-				} catch (Exception e) {
-				}
-			
+				} catch (Exception e) {}
 		}
 		return row;
 	}
-//-------------------------------------------------------------------------------------------------Á¶°Ç¿¡ ¸Â´Â ÇàÀ» Á¶È¸ÇÏ´Â ¸Ş¼Òµå
+
+
+//-------------------------------------------------------------------------------------------------ì¡°ê±´ì— ë§ëŠ” í–‰ì„ ì¡°íšŒí•˜ëŠ” ë©”ì†Œë“œ
 	public int insert(String sql, List<Object> param) {
 		int result = 0;
 
 		try {
 			conn = DriverManager.getConnection(url, user, passwd);
 			pstmt = conn.prepareStatement(sql);
-			
+
 			for (int i = 0; i < param.size(); i++) {
-				// ¿À¶óÅ¬ÀÌ±â ¶§¹®¿¡ 1¹øºÎÅÍ ½ÃÀÛÇØ¾ßµÊ ?¿¡ ´ëÀÀµÇ´Â ¼ıÀÚÀÓ
+				// ì˜¤ë¼í´ì´ê¸° ë•Œë¬¸ì— 1ë²ˆë¶€í„° ì‹œì‘í•´ì•¼ë¨ ?ì— ëŒ€ì‘ë˜ëŠ” ìˆ«ìì„
 				pstmt.setObject(i + 1, param.get(i));
 			}
 			result = pstmt.executeUpdate();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (Exception e) {
-				}
-			;
 			if (pstmt != null)
 				try {
 					pstmt.close();
-				} catch (Exception e) {
-				}
-			;
+				} catch (Exception e) {}
 			if (conn != null)
 				try {
 					conn.close();
-				} catch (Exception e) {
-				}
-			;
+				} catch (Exception e) {}
 		}
 		return result;
 	}
 //-------------------------------------------------------------------------------------------------------------
-	public int update(String sql ) {
 
-		int result = 0;
-
-		// ÀÌ°°Àº Äõ¸®¹®À» Ã³¸®ÇÒ ¼ö ÀÖ´Â Äõ¸®ÀÓ
-		// ex) update tbl_member set mem_mileage =1000 where mem_id = 'a001'
-		// ex) insert into tbl_member (mem_id,mem_pass,mem_name)
-		// values('a003','789012','ÀÌ¼ø½Å');
-		// ex) delete from tbl_mamber where mem_id = 's001'
-		try {
-			conn = DriverManager.getConnection(url, user, passwd);
-			pstmt = conn.prepareStatement(sql);
-			result = pstmt.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (Exception e) {
-				}
-			;
-			if (pstmt != null)
-				try {
-					pstmt.close();
-				} catch (Exception e) {
-				}
-			;
-			if (conn != null)
-				try {
-					conn.close();
-				} catch (Exception e) {
-				}
-			;
-		}
-		return result;
-	}
-//---------------------------------------------------------------------------------------------------
 	public List<Map<String, Object>> selectList(String sql) {
 		List<Map<String, Object>> list = null;
 
@@ -233,28 +127,29 @@ public class JdbcUtil {
 			conn = DriverManager.getConnection(url, user, passwd);
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			// metadata¸¦ ÅëÇØ¼­ resultset¿¡ÀÖ´Â columnÀÇ ¼ö¸¦ ¾ò¾î¿È
+			// metadataë¥¼ í†µí•´ì„œ resultsetì—ìˆëŠ” columnì˜ ìˆ˜ë¥¼ ì–»ì–´ì˜´
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while (rs.next()) {
 				if (list == null)
 					list = new ArrayList<>();
-				// ¸ÊÀº °è¼Ó ³Ö¾î¾ßÇÏ±â‹š¹®¿¡ while¹®ÀÌ µ¹¶§¸¶´Ù °è¼Ó »ı¼ºÇØÁà¾ßÇÔ
+				// ë§µì€ ê³„ì† ë„£ì–´ì•¼í•˜ê¸°Â‹Âšë¬¸ì— whileë¬¸ì´ ëŒë•Œë§ˆë‹¤ ê³„ì† ìƒì„±í•´ì¤˜ì•¼í•¨
 				Map<String, Object> row = new HashMap<>();
 
 				for (int i = 0; i < columnCount; i++) {
 
 					String key = rsmd.getColumnLabel(i + 1);
-					// value °ªÀº rs¿¡¼­ °¡Á®¿Í¾ßÇÔ.
+					// value ê°’ì€ rsì—ì„œ ê°€ì ¸ì™€ì•¼í•¨.
 					Object value = rs.getObject(i + 1);
 					row.put(key, value);
 				}
-				// list¿¡ Â÷·Ê´ë·Î Map¿¡ ÀúÀåµÈ ÀüÃ¼ÀÇ °ªÀ» ³Ö´Â´Ù.
+				// listì— ì°¨ë¡€ëŒ€ë¡œ Mapì— ì €ì¥ëœ ì „ì²´ì˜ ê°’ì„ ë„£ëŠ”ë‹¤.
 				list.add(row);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+
 		} finally {
 			if (rs != null)
 				try {
@@ -289,32 +184,32 @@ public class JdbcUtil {
 	         pstmt = conn.prepareStatement(sql);
 	         if(param != null) {
 		         for (int i = 0; i < param.size(); i++) {
-		            // ¿À¶óÅ¬ÀÌ±â ¶§¹®¿¡ 1¹øºÎÅÍ ½ÃÀÛÇØ¾ßµÊ ?¿¡ ´ëÀÀµÇ´Â ¼ıÀÚÀÓ
+		            // ì˜¤ë¼í´ì´ê¸° ë•Œë¬¸ì— 1ë²ˆë¶€í„° ì‹œì‘í•´ì•¼ë¨ ?ì— ëŒ€ì‘ë˜ëŠ” ìˆ«ìì„
 		            pstmt.setObject(i + 1, param.get(i));
 		         }
 	         }
-	         // sql¿¡ Á¸ÀçÇÏ´Â ?¿¡ ´ëÀÀµÇ´Â µ¥ÀÌÅÍ mapping =>
-	         // pstmt.setÅ¸ÀÔ¸í(?¼ø¹ø,µ¥ÀÌÅÍ)
-	         // prepareStatement Äõ¸®´Â ÀÔ·Âµ¥ÀÌÅÍ°¡ µé¾î¿Í¾ß ½ÇÇàµÊ
+	         // sqlì— ì¡´ì¬í•˜ëŠ” ?ì— ëŒ€ì‘ë˜ëŠ” ë°ì´í„° mapping =>
+	         // pstmt.setíƒ€ì…ëª…(?ìˆœë²ˆ,ë°ì´í„°)
+	         // prepareStatement ì¿¼ë¦¬ëŠ” ì…ë ¥ë°ì´í„°ê°€ ë“¤ì–´ì™€ì•¼ ì‹¤í–‰ë¨
 	         rs = pstmt.executeQuery();
 	         
-	         // metadata¸¦ ÅëÇØ¼­ resultset¿¡ÀÖ´Â columnÀÇ ¼ö¸¦ ¾ò¾î¿È
+	         // metadataë¥¼ í†µí•´ì„œ resultsetì—ìˆëŠ” columnì˜ ìˆ˜ë¥¼ ì–»ì–´ì˜´
 	         ResultSetMetaData rsmd = rs.getMetaData();
 	         int columnCount = rsmd.getColumnCount();
 	         while (rs.next()) {
 	            if (list == null)
 	               list = new ArrayList<>();
-	            // ¸ÊÀº °è¼Ó ³Ö¾î¾ßÇÏ±â  ¹®¿¡ while¹®ÀÌ µ¹¶§¸¶´Ù °è¼Ó »ı¼ºÇØÁà¾ßÇÔ
+	            // ë§µì€ ê³„ì† ë„£ì–´ì•¼í•˜ê¸°  ë¬¸ì— whileë¬¸ì´ ëŒë•Œë§ˆë‹¤ ê³„ì† ìƒì„±í•´ì¤˜ì•¼í•¨
 	            Map<String, Object> row = new HashMap<>();
 	            
 	            for (int i = 0; i < columnCount; i++) {
 	               
 	               String key = rsmd.getColumnLabel(i + 1);
-	               // value °ªÀº rs¿¡¼­ °¡Á®¿Í¾ßÇÔ.
+	               // value ê°’ì€ rsì—ì„œ ê°€ì ¸ì™€ì•¼í•¨.
 	               Object value = rs.getObject(i + 1);
 	               row.put(key, value);
 	            }
-	            // list¿¡ Â÷·Ê´ë·Î Map¿¡ ÀúÀåµÈ ÀüÃ¼ÀÇ °ªÀ» ³Ö´Â´Ù.
+	            // listì— ì°¨ë¡€ëŒ€ë¡œ Mapì— ì €ì¥ëœ ì „ì²´ì˜ ê°’ì„ ë„£ëŠ”ë‹¤.
 	            list.add(row);
 	         }
 	         
@@ -354,23 +249,23 @@ public Map<String, Object> selectChoice(String sql) {
 		pstmt = conn.prepareStatement(sql);
 		rs = pstmt.executeQuery();
 
-		// MetaData : Å×ÀÌºíÀÇ Á¦¾à»çÇ×,±¸¼º,ÄÃ·³¸í,ÄÃ·³°¹¼ö¸¦ °¡Áö°íÀÖ´Â µ¥ÀÌÅÍ
-		// °á°úÁıÇÕÀÌ µé¾î¿À´Â ºÎºĞ
-		// ÄÃ·³ÀÇ¼ö,ÄÃ·³¸íÀ» ¾Ë±âÀ§ÇØ »ç¿ëÇÑ°ÍÀÌ MetaDataÀÓ
+		// MetaData : í…Œì´ë¸”ì˜ ì œì•½ì‚¬í•­,êµ¬ì„±,ì»¬ëŸ¼ëª…,ì»¬ëŸ¼ê°¯ìˆ˜ë¥¼ ê°€ì§€ê³ ìˆëŠ” ë°ì´í„°
+		// ê²°ê³¼ì§‘í•©ì´ ë“¤ì–´ì˜¤ëŠ” ë¶€ë¶„
+		// ì»¬ëŸ¼ì˜ìˆ˜,ì»¬ëŸ¼ëª…ì„ ì•Œê¸°ìœ„í•´ ì‚¬ìš©í•œê²ƒì´ MetaDataì„
 		ResultSetMetaData rsmd = rs.getMetaData();
-		// ÄÃ·³ÀÇ¼ö
+		// ì»¬ëŸ¼ì˜ìˆ˜
 		int columnCount = rsmd.getColumnCount();
-		// rs¿¡ µ¥ÀÌÅÍ°¡ 1°³¸¸ µé¾î°¥°Å¶ó 1°³°¡Á®¿Ã°ÍÀÓ
+		// rsì— ë°ì´í„°ê°€ 1ê°œë§Œ ë“¤ì–´ê°ˆê±°ë¼ 1ê°œê°€ì ¸ì˜¬ê²ƒì„
 		while (rs.next()) {
 			list = new HashMap<>();
 
 			for (int i = 1; i < columnCount; i++) {
-				// columnName -> ¿øº»Å×ÀÌºíÀÇ ÄÃ·³¸í
-				// ColumnLabel -> ÄÃ·³ÀÇ º°Äª
-				// º°ÄªÀÌ ¾øÀ¸¸é ¿øº» ÄÃ·³¸í
+				// columnName -> ì›ë³¸í…Œì´ë¸”ì˜ ì»¬ëŸ¼ëª…
+				// ColumnLabel -> ì»¬ëŸ¼ì˜ ë³„ì¹­
+				// ë³„ì¹­ì´ ì—†ìœ¼ë©´ ì›ë³¸ ì»¬ëŸ¼ëª…
 				//String key = rsmd.getColumnLabel(i);
 				 String key = rsmd.getColumnName(i);
-				// value °ªÀº rs¿¡¼­ °¡Á®¿Í¾ßÇÔ.
+				// value ê°’ì€ rsì—ì„œ ê°€ì ¸ì™€ì•¼í•¨.
 				Object value = rs.getObject(i);
 				list.put(key, value);
 			}
@@ -398,7 +293,7 @@ public Map<String, Object> selectChoice(String sql) {
 			}
 		;
 	}
-	// 1°³ÀÇ °ªÀ» Ãâ·ÂÇÒ°Å´Ï list¾È¸¸µë
+	// 1ê°œì˜ ê°’ì„ ì¶œë ¥í• ê±°ë‹ˆ listì•ˆë§Œë“¬
 	return list;
 }
 
@@ -411,4 +306,71 @@ public Map<String, Object> selectChoice(String sql) {
 
 
 	
+
+
+	
+
+//-------------------------------------------------------------------------------------------------
+	public Map<String, Object> deletetList(String sql, List<Object> param) {
+		Map<String, Object> row = null;
+
+		try {
+
+			conn = DriverManager.getConnection(url, user, passwd);
+			pstmt = conn.prepareStatement(sql);
+
+			for (int i = 0; i < param.size(); i++) {
+				// ì˜¤ë¼í´ì´ê¸° ë•Œë¬¸ì— 1ë²ˆë¶€í„° ì‹œì‘í•´ì•¼ë¨ ?ì— ëŒ€ì‘ë˜ëŠ” ìˆ«ìì„
+				pstmt.setObject(i + 1, param.get(i));
+			}
+
+			rs = pstmt.executeQuery();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (Exception e) {}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (Exception e) {}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (Exception e) {}
+		}
+		return row;
+	}
+
+	public int deleteAllValue(String sql) {
+		int result = 0;
+
+		try {
+			conn = DriverManager.getConnection(url, user, passwd);
+			pstmt = conn.prepareStatement(sql);
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (Exception e) {}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (Exception e) {}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (Exception e) {}
+		}
+		return result;
+	}
+
+}
 

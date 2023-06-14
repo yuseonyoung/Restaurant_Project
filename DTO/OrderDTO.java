@@ -4,9 +4,12 @@ public class OrderDTO {
 	private String i_id;
 	private String i_name; 
 	private String i_origin;
+
 	private String i_expdate;
 	private int i_inven;
 	private String i_stor;
+
+
 	
 	public OrderDTO(){}
 
