@@ -21,16 +21,16 @@ public class OrderDAO {
 		}
 		return instance;
 	}
-//-----------------------------------------------------------------------------------¿©±â ±îÁö ½Ì±¼Åæ
+//-----------------------------------------------------------------------------------ì—¬ê¸° ê¹Œì§€ ì‹±êµ´í†¤
 	
 	JdbcUtil jdbc = JdbcUtil.getInstance();
-	//ÀüÃ¼ ½ÄÀç·á ¸ñ·Ï °¡Á®¿À±â
+
 	public List<Map<String, Object>> selectList(){
 		String sql = "  SELECT I_ID, I_NAME, I_INVEN,  I_ORIGIN " + 
 				" FROM INGREDIENT WHERE I_INVEN <= 10 ";
 		return (List<Map<String, Object>>) jdbc.selectList(sql);
 	}
-	//¹ßÁÖ¼­ °¡Á®¿À±â
+
 	public List<Map<String, Object>> orderAllList(){
 		String sql = " SELECT A.I_ID, A.I_NAME, A.I_INVEN, A.I_ORIGIN, TO_CHAR(B.P_EXPDATE, 'YYYY/MM/DD') AS P_EXPDATE " + 
 				"FROM INGREDIENT A JOIN PURCHASE B ON A.I_ID = B.I_ID(+) ";
@@ -45,9 +45,10 @@ public class OrderDAO {
 		return jdbc.selectOne(sql,param);
 	}
 	
-	public int orderInsert(String name, Object qty){
+	public int orderInsert(String name, Object qty)throws Exception{
 		String key="";
 		Map<String,String> info = login.getSessionStorage();
+
 		for (Map.Entry<String, String> entry : info.entrySet()) {
 		    	key = entry.getKey();	    
 		}
@@ -62,7 +63,6 @@ public class OrderDAO {
 		
 		return jdbc.insert(sql, param);
 	}
-	
 	
 	public List<Map<String, Object>> deleteList() {
 		String sql = " SELECT P_ID, I_NAME, TO_CHAR(P_BDATE, 'YYYY-MM-DD') AS P_BDATE, TO_CHAR(P_EXPDATE, 'YYYY-MM-DD') AS P_EXPDATE, P_QTY "
